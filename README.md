@@ -33,6 +33,8 @@ Edit the application name in the manifest file to be a unique value (an appname 
 
 Visit `http://appname.cloudfoundry.com` and run some queries.
 
+To see the use of multiple instances, run `vmc instances +n` (where n is the number of additional instances of the app to create), and then reload the page - the IP address and port displayed at the end of the page will vary.
+
 ## Issues
 
 A few areas could be tided up:

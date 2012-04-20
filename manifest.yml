@@ -10,7 +10,7 @@ applications:
         exec: ruby sinatwitter.rb
     url: ${name}.${target-base}
     mem: 128M
-    instances: 1
+    instances: 2
     services:
       userlist:
         type: redis

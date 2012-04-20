@@ -13,6 +13,7 @@ This example uses:
 
 - ruby
 - bundler
+- [Twitter Ruby gem](http://twitter.rubyforge.org/)
 - [Sinatra](http://www.sinatrarb.com/) as the framework
 - redis as a datastore
 - [Twitter Bootstrap](http://twitter.github.com) for visual loveliness
@@ -45,9 +46,16 @@ To modify, run `vmc instances +n` (where n is the number of additional instances
 
 ## Issues
 
-A few areas could be tided up:
+The following issues are known:
 
 - lack of error handling -> currently if one or both user IDs don't exist, an error is exposed
+- Twitter API limits only return the first (100?) users in the list of friends/followers, so if a user has many thousands of followers it may not work (Ruby gem and Twitter API hard limits)
+
+## Future enhancements
+
+A few areas could be tided up:
+
+- implement error handling
 - no real need for the query to direct to a separate page, make this dynamic 
 - additional Bootstrap features to be added
 - add a static page with some background information on how it works

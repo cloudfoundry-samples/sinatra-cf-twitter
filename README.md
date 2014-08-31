@@ -1,5 +1,4 @@
 ## Who Follows?
-============
 
 A simple Sinatra/Redis app - does one Twitter user follow another?
 
@@ -11,19 +10,44 @@ There is an example deployed at <http://twhofollows.cfapps.io>
 
 This example uses:
 
-- Ruby
+- Ruby 2+
 - Bundler
 - [Twitter Ruby gem](https://github.com/sferik/twitter)
 - [Sinatra](http://www.sinatrarb.com/) as the framework
-- Redis as a cache/datastore
+- Redis as the cache/datastore
 - [Bootstrap](http://getbootstrap.com) for visual loveliness
-- the latest version of the [cf CLI](https://console.run.pivotal.io/tools)
+- the latest version of the [cf CLI](https://console.run.pivotal.io/tools) for deployment to Cloud Foundry
 
 It demonstrates:
 
 - setting the location of static content with Sinatra
 - the use of layout templates
 - how a Cloud Foundry manifest can be used for deployment
+
+Limitations:
+
+- the app queries the Twitter [GET followers/ids](https://dev.twitter.com/docs/api/1.1/get/followers/ids) REST endpoint, which is [rate-limited](https://dev.twitter.com/docs/rate-limiting/1.1/limits) to 15 calls in a 15 minute window, so it cannot be used heavily. This is just a demonstration of some simple API functionality.  
+
+## Running the app locally
+
+Fork the project.
+
+Then run:
+
+    git clone git@github.com:<your_name>/sinatra-cf-twitter.git whofollows
+    cd whofollows
+
+You will need a local Redis server running. If you need to connect with a password, edit the follow line to add a `:password` value.
+
+```ruby
+REDIS_CLIENT = Redis.new(:host => 'localhost', :port => 6379)
+```
+
+You will need to create a [Twitter app](http://apps.twitter.com) and place the API keys in the environment variables `TW_CONSUMER_KEY`, `TW_CONSUMER_SECRET`, `TW_ACCESS_TOKEN` and `TW_ACCESS_TOKEN_SECRET`.
+
+Run `rackup` to start the server, and navigate to `http://localhost:9292` to access the application.
+
+To clear the database cache, hit the `/cleardb` endpoint.
 
 ## Deployment to Cloud Foundry
 
@@ -34,7 +58,7 @@ First, fork the project. Then run:
     cp manifest.yml.example manifest.yml
     vi manifest.yml
 
-Edit the application name in the manifest file to be a unique value (an appname must be a unique name across all applications running on a Cloud Foundry instance); enter a Redis service instance name; enter your Twitter app API keys; then save the file.
+Edit the application name in the manifest file to be a unique value (an appname must be a unique name across all applications running on a Cloud Foundry instance); enter a Redis service instance name; enter your [Twitter app API keys](http://apps.twitter.com); then save the file.
 
     bundle install
     cf create-service rediscloud 25mb <service-name>
@@ -46,7 +70,7 @@ To see the use of multiple instances, refresh the page (the initial manifest spe
 
 To modify, run `cf scale -i n` (where n is the number of instances of the app to create), and then reload the page. Repeat with a lower value of n to reduce the number.
 
-To clear the database cache, hit the /cleardb endpoint.
+To clear the database cache, hit the `/cleardb` endpoint.
 
 ## Issues
 

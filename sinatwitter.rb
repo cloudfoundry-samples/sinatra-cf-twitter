@@ -10,11 +10,15 @@ configure do
     enable :sessions
     set :public_folder, Proc.new { File.join(__dir__, 'static') }
 
-    services = JSON.parse(ENV['VCAP_SERVICES'])
-    redis_key = services.keys.select { |svc| svc =~ /redis/i }.first
-    redis = services[redis_key].first['credentials']
-    redis_conf = {host: redis['hostname'], port: redis['port'], password: redis['password']}
-    REDIS_CLIENT = Redis.new redis_conf
+    if (ENV['VCAP_SERVICES']).nil?
+      REDIS_CLIENT = Redis.new(:host => 'localhost', :port => 6379)
+    else
+      services = JSON.parse(ENV['VCAP_SERVICES'])
+      redis_key = services.keys.select { |svc| svc =~ /redis/i }.first
+      redis = services[redis_key].first['credentials']
+      redis_conf = {host: redis['hostname'], port: redis['port'], password: redis['password']}
+      REDIS_CLIENT = Redis.new redis_conf
+    end
 
     TWITTER_CLIENT = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV['TW_CONSUMER_KEY']

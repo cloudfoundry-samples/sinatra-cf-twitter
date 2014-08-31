@@ -20,8 +20,10 @@ follow <div class="input-group"><span class="input-group-addon">@</span><input t
   </table>
 </div>
 
+<!-- hide port details if not running on CF -->
+<% port = ENV['PORT'] %>
+<% unless port.nil? || port == 0 %>
 <div class="well well-sm" style="width: 60%">
-<%
-  port = ENV['VCAP_APP_PORT'] %>
-  <%= "<h5>This VCAP instance running on port #{port}</h5>" %>
+  <%= "<h5>This application instance running on port #{port}</h5>" %>
 </div>
+<% end %>
